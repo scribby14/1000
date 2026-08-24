@@ -30,7 +30,7 @@ $klDrv = Get-CimInstance Win32_SystemDriver | Where-Object { $_.Name -match '^(k
 foreach ($d in $klDrv) {
     Write-Host ("  driver : {0,-14} {1,-9} {2}" -f $d.Name, $d.State, $d.DisplayName)
 }
-$hook = $klDrv | Where-Object { ($_.Name -eq 'klhk') -and ($_.State -eq 'Running') }
+$hook = $klDrv | Where-Object { ($_.Name -match '^klhk') -and ($_.State -eq 'Running') }
 if ($hook) {
     Write-Host "  NOTE: klhk (Kaspersky hooking driver) is RUNNING - it injects code into user processes."
 }
@@ -83,6 +83,9 @@ try {
     if ($cert.Issuer -match '(?i)kaspersky') {
         $mitm = $true
         Write-Host "  TLS IS INTERCEPTED by Kaspersky - expect certificate errors in Claude Code / node."
+        Write-Host "  note: this test runs from PowerShell. If Claude is a trusted app with"
+        Write-Host "  'do not scan traffic', Claude's own traffic bypasses the interception"
+        Write-Host "  even though this line still says INTERCEPTED."
     } else {
         Write-Host "  TLS is NOT intercepted."
     }

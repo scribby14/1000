@@ -78,8 +78,14 @@ Kaspersky (Standard / Plus / Premium, 2025–2026): шестерёнка (Нас
 powershell -ExecutionPolicy Bypass -File .\check-av-injection.ps1
 ```
 
-Ожидаем: у всех процессов Claude — `no Kaspersky modules loaded`,
-в блоке TLS — `TLS is NOT intercepted`.
+Ожидаем: у всех процессов Claude — `no Kaspersky modules loaded`.
+
+Про блок TLS: тест выполняется из PowerShell, а не из процесса Claude, поэтому
+галка «Не проверять весь трафик» у Claude на его результат не влияет —
+`TLS IS INTERCEPTED` после настройки не означает, что исключение не работает.
+`TLS is NOT intercepted` появится, только если проверка защищённых соединений
+отключена глобально или домен добавлен в доверенные адреса. Реальный критерий
+для Claude — отсутствие ошибок сертификатов в самом Claude Code.
 
 ## Альтернатива только для TLS
 
